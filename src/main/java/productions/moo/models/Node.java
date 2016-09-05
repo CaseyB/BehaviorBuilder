@@ -48,6 +48,11 @@ public class Node
 		_bounds = bounds;
 	}
 
+	private void updateBounds ()
+	{
+		_bounds.setBounds(_position.x - RADIUS, _position.y - RADIUS, 2 * RADIUS, 2 * RADIUS);
+	}
+
 	public boolean contains (Point point)
 	{
 		return _bounds.contains(point);
@@ -63,9 +68,9 @@ public class Node
 		_selected = selected;
 	}
 
-	private void updateBounds ()
+	public NodeTemplate getTemplate()
 	{
-		_bounds.setBounds(_position.x - RADIUS, _position.y - RADIUS, 2 * RADIUS, 2 * RADIUS);
+		return _template;
 	}
 
 	public void draw (Graphics2D graphics2D)

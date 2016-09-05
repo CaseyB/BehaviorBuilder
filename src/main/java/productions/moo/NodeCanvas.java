@@ -2,6 +2,7 @@ package productions.moo;
 
 import com.google.common.eventbus.Subscribe;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
@@ -15,6 +16,9 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JComponent;
+import javax.swing.ToolTipManager;
+
 import productions.moo.events.ConnectEvent;
 import productions.moo.events.EnableConnectMenuEvent;
 import productions.moo.events.EventHandler;
@@ -23,7 +27,7 @@ import productions.moo.events.ShowPopupMenuEvent;
 import productions.moo.models.Edge;
 import productions.moo.models.Node;
 
-public class NodeCanvas extends Component
+public class NodeCanvas extends JComponent
 {
 	private EventHandler _eventBus;
 	private NodeTypeManager _typeManager;
@@ -250,6 +254,21 @@ public class NodeCanvas extends Component
 				_mousePoint = e.getPoint();
 			}
 			e.getComponent().repaint();
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e)
+		{
+			ToolTipManager.sharedInstance().mouseMoved(e);
+			Node node = getNode(e.getPoint());
+			if (node != null)
+			{
+				setToolTipText(node.getTemplate().fullDisplay);
+			}
+			else
+			{
+				setToolTipText("");
+			}
 		}
 
 		private void selectRect (List<Node> list, Rectangle r)
