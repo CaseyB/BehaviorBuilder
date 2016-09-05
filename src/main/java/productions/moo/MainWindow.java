@@ -1,18 +1,26 @@
 package productions.moo;
 
+import com.google.common.eventbus.Subscribe;
+
 import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.ScrollPane;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import productions.moo.events.AddNodeEvent;
+import productions.moo.events.EventHandler;
+
 public class MainWindow
 {
-	private static Frame _mainFrame;
-	private static NodeCanvas _canvas;
-	private static NodeMenu _meunu;
+	private Frame _mainFrame;
+	private NodeCanvas _canvas;
+	private NodeMenu _meunu;
+	private AddCustomNodeDialog _customNodeDialog;
 
-	public static void main (String[] args)
+	private EventHandler _eventBus;
+
+	public MainWindow()
 	{
 		_mainFrame = new Frame("Behavior Builder");
 		_canvas = new NodeCanvas();
@@ -35,6 +43,16 @@ public class MainWindow
 			}
 		});
 
+		_customNodeDialog = new AddCustomNodeDialog(_mainFrame);
+		_eventBus = EventHandler.getInstance();
+		_eventBus.register(this);
+
 		_mainFrame.setVisible(true);
+	}
+
+	@Subscribe
+	public void showCustomNodeDialog(AddNodeEvent event)
+	{
+		_customNodeDialog.setVisible(true);
 	}
 }

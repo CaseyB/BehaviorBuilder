@@ -23,7 +23,9 @@ import productions.moo.events.ConnectEvent;
 import productions.moo.events.EnableConnectMenuEvent;
 import productions.moo.events.EventHandler;
 import productions.moo.events.NewNodeEvent;
+import productions.moo.events.SaveStateEvent;
 import productions.moo.events.ShowPopupMenuEvent;
+import productions.moo.exporters.BuilderSave;
 import productions.moo.models.Edge;
 import productions.moo.models.Node;
 
@@ -79,6 +81,12 @@ public class NodeCanvas extends JComponent
 		}
 
 		repaint();
+	}
+
+	@Subscribe
+	public void save(SaveStateEvent event)
+	{
+		BuilderSave.save(_typeManager.getNodeTypes(), _nodes, _edges);
 	}
 
 	@Override

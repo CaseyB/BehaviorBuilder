@@ -1,5 +1,7 @@
 package productions.moo.models;
 
+import com.google.gson.annotations.Expose;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -8,22 +10,35 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
+import java.util.UUID;
 
 public class Node
 {
 	private static final int RADIUS = 25;
 	private static final Font FONT = new Font("Arial Black", Font.BOLD, 20);
 
+	@Expose
+	private String _uuid;
+
+	@Expose
 	private Point _position;
+
+	@Expose
 	private NodeTemplate _template;
 	private boolean _selected = false;
 	private Rectangle _bounds = new Rectangle();
 
 	public Node (Point position, NodeTemplate template)
 	{
+		_uuid = UUID.randomUUID().toString();
 		_position = position;
 		_template = template;
 		updateBounds();
+	}
+
+	public String getUUID()
+	{
+		return _uuid;
 	}
 
 	public Point getPosition ()

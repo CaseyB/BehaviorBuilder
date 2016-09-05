@@ -28,4 +28,14 @@ public class Edge
 		graphics2D.drawLine(p1.x, p1.y, p2.x, p2.y);
 		graphics2D.setStroke(oldStroke);
 	}
+
+	public Node getNode1()
+	{
+		return _node1;
+	}
+
+	public Node getNode2()
+	{
+		return _node2;
+	}
 }
