@@ -7,9 +7,9 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.PopupMenu;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 
 import productions.moo.events.AddNodeEvent;
@@ -20,11 +20,12 @@ import productions.moo.events.NewNodeEvent;
 import productions.moo.events.NodeAddedEvent;
 import productions.moo.events.SaveStateEvent;
 import productions.moo.events.ShowPopupMenuEvent;
-import productions.moo.exporters.BuilderSave;
 import productions.moo.models.NodeTemplate;
 
 public class NodeMenu extends MenuBar
 {
+	private MainWindow _mainWindow;
+
 	private EventHandler _eventBus;
 
 	private MenuItemListener _menuListener;
@@ -39,8 +40,10 @@ public class NodeMenu extends MenuBar
 
 	private List<NodeTemplate> _templates;
 
-	public NodeMenu ()
+	public NodeMenu (MainWindow window)
 	{
+		_mainWindow = window;
+
 		_eventBus = EventHandler.getInstance();
 		_eventBus.register(this);
 
@@ -53,7 +56,7 @@ public class NodeMenu extends MenuBar
 		return _popup;
 	}
 
-	private void buildAppMenu()
+	private void buildAppMenu ()
 	{
 		_menuListener = new MenuItemListener();
 
@@ -62,6 +65,7 @@ public class NodeMenu extends MenuBar
 		_saveMenu = new MenuItem("Save");
 		_saveMenu.setActionCommand("Save");
 		_saveMenu.addActionListener(_menuListener);
+		_saveMenu.setEnabled(_mainWindow.getSaveFile() != null);
 		fileMenu.add(_saveMenu);
 
 		MenuItem saveAs = new MenuItem("Save as...");
@@ -79,7 +83,7 @@ public class NodeMenu extends MenuBar
 		add(fileMenu);
 	}
 
-	private void buildPopUpMenu()
+	private void buildPopUpMenu ()
 	{
 		_popupListener = new PopUpItemListener();
 
@@ -106,7 +110,7 @@ public class NodeMenu extends MenuBar
 	}
 
 	@Subscribe
-	public void addNode(NodeAddedEvent event)
+	public void addNode (NodeAddedEvent event)
 	{
 		_templates.add(event.template);
 
@@ -124,7 +128,7 @@ public class NodeMenu extends MenuBar
 	}
 
 	@Subscribe
-	public void enableConnectMenu(EnableConnectMenuEvent event)
+	public void enableConnectMenu (EnableConnectMenuEvent event)
 	{
 		_connectMenu.setEnabled(event.enable);
 	}
@@ -135,15 +139,21 @@ public class NodeMenu extends MenuBar
 		{
 			String actionCommand = e.getActionCommand();
 
-			if(actionCommand.equalsIgnoreCase("Save"))
+			if (actionCommand.equalsIgnoreCase("Save"))
 			{
-				_eventBus.post(new SaveStateEvent());
+				_eventBus.post(new SaveStateEvent(_mainWindow.getSaveFile()));
 			}
-			else if(actionCommand.equalsIgnoreCase("Connect"))
+			else if (actionCommand.equalsIgnoreCase("SaveAs"))
+			{
+				File file = _mainWindow.createSaveFile();
+				_saveMenu.setEnabled(file != null);
+				_eventBus.post(new SaveStateEvent(file));
+			}
+			else if (actionCommand.equalsIgnoreCase("Connect"))
 			{
 				_eventBus.post(new ConnectEvent());
 			}
-			else if(actionCommand.equalsIgnoreCase("CustomNode"))
+			else if (actionCommand.equalsIgnoreCase("CustomNode"))
 			{
 				_eventBus.post(new AddNodeEvent());
 			}

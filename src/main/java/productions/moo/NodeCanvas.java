@@ -2,9 +2,7 @@ package productions.moo;
 
 import com.google.common.eventbus.Subscribe;
 
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -72,10 +70,10 @@ public class NodeCanvas extends JComponent
 	}
 
 	@Subscribe
-	public void connectNodes(ConnectEvent event)
+	public void connectNodes (ConnectEvent event)
 	{
 		List<Node> selectedNodes = getSelectedNodes();
-		for(Node node : selectedNodes)
+		for (Node node : selectedNodes)
 		{
 			_edges.add(new Edge(node, _hoverNode));
 		}
@@ -84,9 +82,9 @@ public class NodeCanvas extends JComponent
 	}
 
 	@Subscribe
-	public void save(SaveStateEvent event)
+	public void save (SaveStateEvent event)
 	{
-		BuilderSave.save(_typeManager.getNodeTypes(), _nodes, _edges);
+		BuilderSave.save(event.saveFile, _typeManager.getNodeTypes(), _nodes, _edges);
 	}
 
 	@Override
@@ -265,7 +263,7 @@ public class NodeCanvas extends JComponent
 		}
 
 		@Override
-		public void mouseMoved(MouseEvent e)
+		public void mouseMoved (MouseEvent e)
 		{
 			ToolTipManager.sharedInstance().mouseMoved(e);
 			Node node = getNode(e.getPoint());
